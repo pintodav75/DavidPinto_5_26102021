@@ -5,6 +5,7 @@ const productToHtml = (p) => {
         <article>
             <img src="${p.imageUrl}" alt="${p.altTxt}">
             <h3 class="productName">${p.name}</h3>
+            <h4>${p.price}€</h4>
             <p class="productDescription">${p.description}</p>
         </article>
     </a>
