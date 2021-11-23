@@ -6,7 +6,6 @@ const product = fetch(`http://127.0.0.1:3000/api/products/${id}`)
         return response.json()
     })
     .then(function (content) {
-        console.log(content);
         document.getElementById('title').innerHTML = `<h1 id="title">${content.name}</h1>`;
         document.getElementById('description').innerHTML = `<p id="description">${content.description}</p>`;
         document.getElementById('price').innerHTML = `<span id="price">${content.price}</span>`;
@@ -17,45 +16,43 @@ const product = fetch(`http://127.0.0.1:3000/api/products/${id}`)
                         ${content.colors.map(c => {
                      return `<option value="${c}">${c}</option>`;
                          })}
-                    </select>
-                    `;
-        // maintenant on recupere au moment du "valid Panier" les informations
-        // sur l articler a ajouter au panier qui est dans notre localStorage
+                    </select>`;
         document.getElementById("addToCart").addEventListener("click", function() {
             const numberOfarticle = document.getElementById("quantity").value;
             const selectColor = document.getElementById("colors");
             const colorsOfArticle = selectColor.options[selectColor.selectedIndex].value;
 
-            // handle error case here
+            // gerer cas d'erreurs
+            // Number.isInteger(numberOfarticle)
 
-        
-            console.log('Color: ', colorsOfArticle);
-            console.log('quantity: ', numberOfarticle);
-            console.log('id: ', id);
-
-            const currentTab = localStorage.getItem("tab");
-
-            const currentObject = JSON.parse(currentTab) || [];
-
-            const newOject = {
-                id: id,
-                title: content.name,
+            // nouvel article
+            const newArticle = {
+                id: content._id,
                 price: content.price,
+                name: content.name,
+                url: content.imageUrl,
                 color: colorsOfArticle,
-                quantity: numberOfarticle,
+                quantity: parseInt(numberOfarticle, 10),
             };
 
-            
 
-            const strTab = JSON.stringify(tab);
+            const stringTabArticles = localStorage.getItem('articles');
+            let tabArticles = JSON.parse(stringTabArticles) || [];
 
-            // save article in localstorage
-            localStorage.setItem("tab", strTab)
+            let index = tabArticles.findIndex(e => e.id === newArticle.id && e.color === newArticle.color);
+            if (index != -1) {
+                tabArticles[index] = {
+                    ...newArticle,
+                    quantity: newArticle.quantity + tabArticles[index].quantity,
+                }
+            } else {
+                tabArticles.push(newArticle);
+            }
 
-            //  cart.js
-            // const tabRes = localStorage.getItem("tab");
-            // const resObject = JSON.parse(tabRes);
-            // console.log(resObject);
+            console.log('mon panier: ', tabArticles);
+
+            const stringNewArticles = JSON.stringify(tabArticles);
+            localStorage.setItem("articles", stringNewArticles);
         });
     })
 
