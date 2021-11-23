@@ -11,7 +11,7 @@ const productToHtml = (p) => {
     </a>
     `;  
 };
-
+/* Recuperation des donnees de l 'API */
   const products = fetch('http://127.0.0.1:3000/api/products')
   .then((response) => {
        return response.json() 
