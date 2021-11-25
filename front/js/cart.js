@@ -1,11 +1,55 @@
+// function relatives a la gestion du panier
+
+
+// Fonction qui recupere la list des produti dans le storage
+// et les insert dans le html dans cart.html
+const InsertAllProductInHtml = () => {
+
+}
+
+
+// function qui prend en parametre la list des produits
+// et return la valeur totale du prix
+const GetTotalPrice = (products) => {
+
+}
+
+
+// function qui prend en parametre la list des produits
+// et return la valeur totale des quantites
+const GetTotalQuantity = (products) => {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const stringTabArticles = localStorage.getItem('articles');
 let tabArticles = JSON.parse(stringTabArticles) || [];
 
 
-let caca;
 const strHtml = tabArticles.map((e) => {
-    let fn = (id) => () => { console.log(id) };
-    caca = fn(e.id);
     return `
     <article class="cart__item" data-id="${e.id}">
                 <div class="cart__item__img">
@@ -19,7 +63,7 @@ const strHtml = tabArticles.map((e) => {
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" onchange="caca()" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${e.quantity}">
+                      <input type="number" onchange="" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${e.quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
                       <p class="deleteItem">Supprimer</p>
