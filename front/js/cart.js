@@ -1,9 +1,11 @@
 const stringTabArticles = localStorage.getItem('articles');
 let tabArticles = JSON.parse(stringTabArticles) || [];
 
-console.log(tabArticles);
 
+let caca;
 const strHtml = tabArticles.map((e) => {
+    let fn = (id) => () => { console.log(id) };
+    caca = fn(e.id);
     return `
     <article class="cart__item" data-id="${e.id}">
                 <div class="cart__item__img">
@@ -17,7 +19,7 @@ const strHtml = tabArticles.map((e) => {
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${e.quantity}">
+                      <input type="number" onchange="caca()" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${e.quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
                       <p class="deleteItem">Supprimer</p>
@@ -35,12 +37,11 @@ document.getElementById('cart__items').innerHTML = `
 `;
 
 
-
-
 const totalQuantity = tabArticles.reduce((prev, curr) => prev + curr.quantity, 0)
 document.getElementById('totalQuantity').innerHTML = `<span id="totalQuantity">${totalQuantity}</span>`;
 
 const totalPrice = tabArticles.reduce((prev, curr) => prev + curr.quantity * curr.price, 0)
 document.getElementById('totalPrice').innerHTML = `<span id="totalPrice">${totalPrice}</span>`;
 
-console.log(totalQuantity)
+ 
+

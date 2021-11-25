@@ -14,47 +14,51 @@ const product = fetch(`http://127.0.0.1:3000/api/products/${id}`)
                     <select name="color-select" id="colors">
                         <option value="">--SVP, choisissez une couleur --</option>
                         ${content.colors.map(c => {
-                     return `<option value="${c}">${c}</option>`;
-                         })}
+            return `<option value="${c}">${c}</option>`;
+        })}
                     </select>`;
-        document.getElementById("addToCart").addEventListener("click", function() {
+        document.getElementById("addToCart").addEventListener("click", function () {
             const numberOfarticle = document.getElementById("quantity").value;
             const selectColor = document.getElementById("colors");
             const colorsOfArticle = selectColor.options[selectColor.selectedIndex].value;
 
             // gerer cas d'erreurs
-            // Number.isInteger(numberOfarticle)
+            if (Math.sign(numberOfarticle) <= 0) {
 
-            // nouvel article
-            const newArticle = {
-                id: content._id,
-                price: content.price,
-                name: content.name,
-                url: content.imageUrl,
-                color: colorsOfArticle,
-                quantity: parseInt(numberOfarticle, 10),
-            };
-
-
-            const stringTabArticles = localStorage.getItem('articles');
-            let tabArticles = JSON.parse(stringTabArticles) || [];
-
-            let index = tabArticles.findIndex(e => e.id === newArticle.id && e.color === newArticle.color);
-            if (index != -1) {
-                tabArticles[index] = {
-                    ...newArticle,
-                    quantity: newArticle.quantity + tabArticles[index].quantity,
-                }
-            } else {
-                tabArticles.push(newArticle);
+                document.getElementById('errorQuantity').innerHTML = `<h4 id="errorQuantity">Veuillez saisir une quantité</h4`
+                return
             }
+                // nouvel article
+                const newArticle = {
+                    id: content._id,
+                    price: content.price,
+                    name: content.name,
+                    url: content.imageUrl,
+                    color: colorsOfArticle,
+                    quantity: parseInt(numberOfarticle, 10),
+                };
 
-            console.log('mon panier: ', tabArticles);
 
-            const stringNewArticles = JSON.stringify(tabArticles);
-            localStorage.setItem("articles", stringNewArticles);
-        });
+                const stringTabArticles = localStorage.getItem('articles');
+                let tabArticles = JSON.parse(stringTabArticles) || [];
+
+                let index = tabArticles.findIndex(e => e.id === newArticle.id && e.color === newArticle.color);
+                if (index != -1) {
+                    tabArticles[index] = {
+                        ...newArticle,
+                        quantity: newArticle.quantity + tabArticles[index].quantity,
+                    }
+                } else {
+                    tabArticles.push(newArticle);
+                }
+
+                console.log('mon panier: ', tabArticles);
+
+                const stringNewArticles = JSON.stringify(tabArticles);
+                localStorage.setItem("articles", stringNewArticles);
+            });
     })
+
 
 
 
