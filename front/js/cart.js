@@ -1,55 +1,19 @@
-// function relatives a la gestion du panier
 
-
-// Fonction qui recupere la list des produti dans le storage
-// et les insert dans le html dans cart.html
-const InsertAllProductInHtml = () => {
-
+// fonction qui ajoute l article passe en parametre
+// dans le tableau d'articles du localstorage
+const ajoutlesProductsToLS = (produits) => {
+  const stringProduit = JSON.stringify(produits);
+  localStorage.setItem("articles", stringProduit);
 }
 
-
-// function qui prend en parametre la list des produits
-// et return la valeur totale du prix
-const GetTotalPrice = (products) => {
-
+// fonction qui retorune le tableau d'articles dans le localstorage
+const recupereProductsFromLS = () => {
+  const strProducts = localStorage.getItem('articles');
+  return JSON.parse(strProducts) || [];
 }
 
-
-// function qui prend en parametre la list des produits
-// et return la valeur totale des quantites
-const GetTotalQuantity = (products) => {
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const stringTabArticles = localStorage.getItem('articles');
-let tabArticles = JSON.parse(stringTabArticles) || [];
-
-
-const strHtml = tabArticles.map((e) => {
+const insertArticlesInPage = (tabArticles) => {
+  const strHtml = tabArticles.map((e) => {
     return `
     <article class="cart__item" data-id="${e.id}">
                 <div class="cart__item__img">
@@ -72,20 +36,46 @@ const strHtml = tabArticles.map((e) => {
                 </div>
     </article>
     `;
-})
+  })
+  document.getElementById('cart__items').innerHTML = ` <section id="cart__items">${strHtml}</section>`;
+    
+  const totalQuantity = tabArticles.reduce((prev, curr) => prev + curr.quantity, 0)
+  document.getElementById('totalQuantity').innerHTML = `<span id="totalQuantity">${totalQuantity}</span>`;
 
-document.getElementById('cart__items').innerHTML = `
-<section id="cart__items">
-    ${strHtml}
-</section>
-`;
+  const totalPrice = tabArticles.reduce((prev, curr) => prev + curr.quantity * curr.price, 0)
+  document.getElementById('totalPrice').innerHTML = `<span id="totalPrice">${totalPrice}</span>`;
+}
 
+const deleteItem = (item, tabArticles) => {
+  const newTab = tabArticles.filter(e => {
+    if (e.id !== item.id) return true
+    if (e.name !== item.name) return true
+    if (e.color !== item.color) return true
+    return false;
+  });
+  ajoutlesProductsToLS(newTab);
+  insertArticlesInPage(newTab);
+  return newTab;
+}
 
-const totalQuantity = tabArticles.reduce((prev, curr) => prev + curr.quantity, 0)
-document.getElementById('totalQuantity').innerHTML = `<span id="totalQuantity">${totalQuantity}</span>`;
+const addListener = (tabArticles) => {
+  // delete item
+  let arr = document.getElementsByClassName("deleteItem");
+  Array.from(arr).forEach((e, index) => {
+    e.addEventListener('click', () => {
+      let newTab = deleteItem(tabArticles[index], tabArticles);
+      addListener(newTab);
+    });
+  });
+  // function a trou pour la quantity
+  //
+}
 
-const totalPrice = tabArticles.reduce((prev, curr) => prev + curr.quantity * curr.price, 0)
-document.getElementById('totalPrice').innerHTML = `<span id="totalPrice">${totalPrice}</span>`;
+const loadArticles = () => {
+  let tabArticles = recupereProductsFromLS();
+  insertArticlesInPage(tabArticles);  
+  return tabArticles;  
+}
 
- 
-
+let tabArticles = loadArticles();
+addListener(tabArticles);
