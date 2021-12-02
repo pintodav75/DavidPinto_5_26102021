@@ -47,13 +47,7 @@ const insertArticlesInPage = (tabArticles) => {
 }
 
 const deleteItem = (item, tabArticles) => {
-  const newTab = tabArticles.filter(e => {
-    if (e.id !== item.id) return true
-    if (e.name !== item.name) return true
-    if (e.color !== item.color) return true
-    return false;
-  });
-  return newTab;
+  return tabArticles.filter(e => JSON.stringify(e) !== JSON.stringify(item))
 }
 
 const changeQuantity = (index, value, tabArticles) => {
@@ -78,7 +72,7 @@ const addListener = (tabArticles) => {
   Array.from(arr2).forEach((e, index) => {
     e.addEventListener('input', () => {
       if (isNaN(e.value) || e.value === '')
-        e.value = 1;
+        e.value = '1';
       const newQuantity = parseInt(e.value, 10);
       let newTab;
       if (newQuantity <= 0)
@@ -92,10 +86,36 @@ const addListener = (tabArticles) => {
 
 }
 
+const order = document.getElementById('order');
+
+let firstName = document.getElementById('firstName');
+let lastName = document.getElementById('lastName');
+let address = document.getElementById('address');
+let city = document.getElementById('city');
+let email = document.getElementById('email');
+
+const isAlpha = str => /^[a-zA-Z]*$/.test(str);
+
+order.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!isAlpha(firstName.value) == true) {
+    console.log('erreur prenom')
+    firstNameErrorMsg.innerHTML = `Veuillez saisir votre prenom`;
+  }
+  if (!isAlpha(lastName.value) == true) {
+    console.log('erreur nom')
+    lastNameErrorMsg.innerHTML = `Veuillez saisir votre nom`;
+  }
+  if (!isAlpha(city.value) == true) {
+    console.log('Erreur city')
+    cityErrorMsg.innerHTML = `Veuillez saisir votre ville`
+  }
+})
+
 const main = () => {
   let tabArticles = recupereProductsFromLS();
   insertArticlesInPage(tabArticles);  
-  addListener(tabArticles);  
+  addListener(tabArticles);
 }
 
 main()
