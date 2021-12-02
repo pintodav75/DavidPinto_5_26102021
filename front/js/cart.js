@@ -87,29 +87,40 @@ const addListener = (tabArticles) => {
 }
 
 const order = document.getElementById('order');
-
 let firstName = document.getElementById('firstName');
 let lastName = document.getElementById('lastName');
 let address = document.getElementById('address');
 let city = document.getElementById('city');
 let email = document.getElementById('email');
 
+// REGEX
 const isAlpha = str => /^[a-zA-Z]*$/.test(str);
+const isEmail = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+
 
 order.addEventListener('click', (e) => {
   e.preventDefault();
   if (!isAlpha(firstName.value) == true) {
-    console.log('erreur prenom')
     firstNameErrorMsg.innerHTML = `Veuillez saisir votre prenom`;
   }
   if (!isAlpha(lastName.value) == true) {
-    console.log('erreur nom')
     lastNameErrorMsg.innerHTML = `Veuillez saisir votre nom`;
   }
-  if (!isAlpha(city.value) == true) {
-    console.log('Erreur city')
-    cityErrorMsg.innerHTML = `Veuillez saisir votre ville`
+  if (!isNaN(city.value) == true) {
+    cityErrorMsg.innerHTML = `Veuillez saisir votre ville`;
   }
+  if (isEmail(email.value) == false) {
+    emailErrorMsg.innerHTML = `Veuillez saisir votre adresse email !`;
+  }
+
+  const validOrder = {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      adress: address.value,
+      city: city.value,
+      email: email.value,
+  };
+  console.log(validOrder)
 })
 
 const main = () => {
