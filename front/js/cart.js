@@ -113,14 +113,29 @@ order.addEventListener('click', (e) => {
     emailErrorMsg.innerHTML = `Veuillez saisir votre adresse email !`;
   }
 
-  const validOrder = {
+  const contact = {
       firstName: firstName.value,
       lastName: lastName.value,
-      adress: address.value,
+      address: address.value,
       city: city.value,
       email: email.value,
   };
-  console.log(validOrder)
+
+ const  pannier =  recupereProductsFromLS();
+ const tabId = pannier.map(e => e.id);
+
+ fetch("http://127.0.0.1:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify({ contact, products: tabId }),
+    headers: { "Content-Type": "application/json" },
+})
+.then(response => response.json())
+.then(json => console.log(json.orderId))
+.catch(error => {
+  console.log(error)
+}) 
+
+
 })
 
 const main = () => {
