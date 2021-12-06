@@ -100,17 +100,25 @@ const isEmail = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(em
 
 order.addEventListener('click', (e) => {
   e.preventDefault();
-  if (!isAlpha(firstName.value) == true) {
+  if (!isAlpha(firstName.value) == true || lastName.value.length == 0) {
     firstNameErrorMsg.innerHTML = `Veuillez saisir votre prenom`;
+    return
   }
-  if (!isAlpha(lastName.value) == true) {
+  if (!isAlpha(lastName.value) == true || lastName.value.length == 0) {
     lastNameErrorMsg.innerHTML = `Veuillez saisir votre nom`;
+    return
   }
-  if (!isNaN(city.value) == true) {
+  if (address.value.length == 0) {
+    addressErrorMsg.innerHTML = `Veuillez saisir votre adresse`;
+  return
+  }
+  if (!isNaN(city.value) == true || lastName.value.length == 0) {
     cityErrorMsg.innerHTML = `Veuillez saisir votre ville`;
+    return
   }
-  if (isEmail(email.value) == false) {
+  if (isEmail(email.value) == false || lastName.value.length == 0) {
     emailErrorMsg.innerHTML = `Veuillez saisir votre adresse email !`;
+    return
   }
 
   const contact = {
@@ -130,14 +138,17 @@ order.addEventListener('click', (e) => {
     headers: { "Content-Type": "application/json" },
 })
 .then(response => response.json())
-.then(json => console.log(json.orderId))
-.catch(error => {
-  console.log(error)
-}) 
-
+.then(json => {
+  localStorage.clear();
+document.location.href = `confirmation.html?orderId=${json.orderId}`;
+return
 
 })
-
+.catch(error => {
+  console.log(error)
+  
+}) 
+})
 const main = () => {
   let tabArticles = recupereProductsFromLS();
   insertArticlesInPage(tabArticles);  
