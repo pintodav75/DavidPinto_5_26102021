@@ -64,7 +64,10 @@ const addOnClickPanier = (product) => {
         const numberOfarticle = document.getElementById("quantity").value;
         const selectColor = document.getElementById("colors");
         const colorsOfArticle = selectColor.options[selectColor.selectedIndex].value;
-
+        if (colorsOfArticle == '') {
+            alert("Veuillez séléctionner une couleur !")
+            return
+        }
             // nouvel article
             const newArticle = {
                 id: product._id,
@@ -78,6 +81,7 @@ const addOnClickPanier = (product) => {
             let tabArticles = recupereProductsFromLS();
             tabArticles = addProductInList(newArticle, tabArticles)
             ajoutlesProductsToLS(tabArticles);
+            alert("Votre article a été ajouté au panier !");
         });
 }
 

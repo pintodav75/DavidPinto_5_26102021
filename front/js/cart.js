@@ -131,6 +131,10 @@ order.addEventListener('click', (e) => {
   };
 
  const  pannier =  recupereProductsFromLS();
+ if (pannier.length == 0) {
+  alert("Votre panier est vide !");
+  return
+ }
  const tabId = pannier.map(e => e.id);
 // requete POST 
  fetch("http://127.0.0.1:3000/api/products/order", {
