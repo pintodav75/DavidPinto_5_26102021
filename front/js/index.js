@@ -1,4 +1,4 @@
-
+// affichage produit par produit 
 const productToHtml = (p) => {
   return `
     <a href="./product.html?id=${p._id}">

@@ -11,7 +11,7 @@ const recupereProductsFromLS = () => {
   const strProducts = localStorage.getItem('articles');
   return JSON.parse(strProducts) || [];
 }
-
+// affiche le produit
 const insertArticlesInPage = (tabArticles) => {
   const strHtml = tabArticles.map((e) => {
     return `
@@ -21,7 +21,7 @@ const insertArticlesInPage = (tabArticles) => {
                 </div>
                 <div class="cart__item__content">
                   <div class="cart__item__content__titlePrice">
-                    <h2>${e.name}</h2>
+                    <h2>${e.name} (${e.color})</h2>
                     <p>${e.price}</p>
                   </div>
                   <div class="cart__item__content__settings">
@@ -45,18 +45,18 @@ const insertArticlesInPage = (tabArticles) => {
   const totalPrice = tabArticles.reduce((prev, curr) => prev + curr.quantity * curr.price, 0)
   document.getElementById('totalPrice').innerHTML = `<span id="totalPrice">${totalPrice}</span>`;
 }
-
+// supprime un produit
 const deleteItem = (item, tabArticles) => {
   return tabArticles.filter(e => JSON.stringify(e) !== JSON.stringify(item))
 }
-
+// met a jour la quantité d'un produit
 const changeQuantity = (index, value, tabArticles) => {
   tabArticles[index].quantity = value;
   ajoutlesProductsToLS(tabArticles);
   insertArticlesInPage(tabArticles);
   return tabArticles;
 }
-
+//fonction qui s'exccecute au moment du click(modification quantité ou supprimer)
 const addListener = (tabArticles) => {
   // delete item
   let arr = document.getElementsByClassName("deleteItem");
@@ -85,7 +85,7 @@ const addListener = (tabArticles) => {
   }); 
 
 }
-
+// recuperation des class pour la formulaire
 const order = document.getElementById('order');
 let firstName = document.getElementById('firstName');
 let lastName = document.getElementById('lastName');
@@ -96,10 +96,11 @@ let email = document.getElementById('email');
 // REGEX
 const isAlpha = str => /^[a-zA-Z]*$/.test(str);
 const isEmail = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-
-
+// au moment du click sur "commander"
+//save des infos pour generer ID de commande()
 order.addEventListener('click', (e) => {
   e.preventDefault();
+  // check si les infos entrée sont valide
   if (!isAlpha(firstName.value) == true || lastName.value.length == 0) {
     firstNameErrorMsg.innerHTML = `Veuillez saisir votre prenom`;
     return
@@ -131,7 +132,7 @@ order.addEventListener('click', (e) => {
 
  const  pannier =  recupereProductsFromLS();
  const tabId = pannier.map(e => e.id);
-
+// requete POST 
  fetch("http://127.0.0.1:3000/api/products/order", {
     method: "POST",
     body: JSON.stringify({ contact, products: tabId }),
