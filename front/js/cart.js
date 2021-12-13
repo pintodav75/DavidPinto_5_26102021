@@ -59,8 +59,9 @@ const changeQuantity = (index, value, tabArticles) => {
 //fonction qui s'exccecute au moment du click(modification quantité ou supprimer)
 const addListener = (tabArticles) => {
   // delete item
-  let arr = document.getElementsByClassName("deleteItem");
-  Array.from(arr).forEach((e, index) => {
+  let collection = document.getElementsByClassName("deleteItem");
+  let arr = Array.from(collection);
+  arr.forEach((e, index) => {
     e.addEventListener('click', () => {
       let newTab = deleteItem(tabArticles[index], tabArticles);
       ajoutlesProductsToLS(newTab);
@@ -136,6 +137,9 @@ order.addEventListener('click', (e) => {
   return
  }
  const tabId = pannier.map(e => e.id);
+
+ alert('commande en cours de traitement..')
+
 // requete POST 
  fetch("http://127.0.0.1:3000/api/products/order", {
     method: "POST",
@@ -145,13 +149,11 @@ order.addEventListener('click', (e) => {
 .then(response => response.json())
 .then(json => {
   localStorage.clear();
-document.location.href = `confirmation.html?orderId=${json.orderId}`;
-return
-
+  document.location.href = `confirmation.html?orderId=${json.orderId}`;
+  return
 })
 .catch(error => {
-  console.log(error)
-  
+  alert('Une erreur est survenue durant la prise en charge de votre commande');
 }) 
 })
 const main = () => {

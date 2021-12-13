@@ -18,9 +18,17 @@ const recupereProductsFromLS = () => {
 const recupProduct = async (url) => {
     const currentUrl = new URL(url)
     const id = currentUrl.searchParams.get("id");
-    const product = await fetch(`http://127.0.0.1:3000/api/products/${id}`)
-    const productJson = await product.json()
 
+    let response;
+    try {
+        response = await fetch(`http://127.0.0.1:3000/api/products/${id}`);
+        if (response.status !== 200)
+            return null;
+    } catch (err) {
+        return null;
+    }
+
+    const productJson = await response.json()
     return productJson;
 }
 
@@ -64,8 +72,8 @@ const addOnClickPanier = (product) => {
         const numberOfarticle = document.getElementById("quantity").value;
         const selectColor = document.getElementById("colors");
         const colorsOfArticle = selectColor.options[selectColor.selectedIndex].value;
-        if (colorsOfArticle == '') {
-            alert("Veuillez séléctionner une couleur !")
+        if (colorsOfArticle == '' || numberOfarticle === '0') {
+            alert("Veuillez séléctionner une couleur ou mettre une quantite superieur a 0!")
             return
         }
             // nouvel article
@@ -85,11 +93,24 @@ const addOnClickPanier = (product) => {
         });
 }
 
+const insertError = () => {
+    let e = document.getElementsByClassName("item")
+    e[0].innerHTML = "<h4> Une erreur est survenue lors du fetch du produit </h4>"
+}
+
 const main = async () => {
-    const product = await recupProduct(document.URL);
-    
-    InsertProductInHtml(product);
-    addOnClickPanier(product);
+    document.getElementById('loading').innerHTML = '<h2>Chargement du Produit en cours..</h2>';
+
+    let product = await recupProduct(document.URL);
+
+    if (product === null) {
+        insertError();
+    } else {
+        InsertProductInHtml(product);
+        addOnClickPanier(product);
+    }
+
+    document.getElementById('loading').innerHTML = '';
 }
 
 main()
